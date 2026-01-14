@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { HeroSection } from "@/components/HeroSection";
+import { DetailsSection } from "@/components/DetailsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { LayoutSection } from "@/components/LayoutSection";
 import { GallerySection } from "@/components/GallerySection";
@@ -17,6 +18,7 @@ const Index = () => {
       <Header />
       <main className="pb-20 lg:pb-0">
         <HeroSection />
+        <DetailsSection />
         <FeaturesSection />
         <LayoutSection />
         <GallerySection />
