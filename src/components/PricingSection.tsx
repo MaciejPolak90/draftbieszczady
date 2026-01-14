@@ -12,7 +12,6 @@ const included = [
 ];
 
 const rules = [
-  "Bez imprez — miejsce dla osób szukających spokoju",
   "Rezerwacja tylko przez telefon, SMS lub WhatsApp",
   "Zaliczka przy rezerwacji",
 ];
