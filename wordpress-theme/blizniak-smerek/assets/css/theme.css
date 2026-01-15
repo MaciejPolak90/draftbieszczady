@@ -1,0 +1,25 @@
+body.overflow-hidden {
+  overflow: hidden;
+}
+
+.bws-accordion-trigger svg {
+  transition: transform 0.2s ease;
+}
+
+.bws-accordion-trigger.is-open svg {
+  transform: rotate(45deg);
+}
+
+.bws-lightbox {
+  backdrop-filter: blur(4px);
+}
+
+.bws-mobile-menu {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bws-mobile-menu.hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
