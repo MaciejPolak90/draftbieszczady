@@ -1,0 +1,3 @@
+# Lokalnie generowane pliki pomocnicze
+wpcli/*.log
+wpcli/*.tmp

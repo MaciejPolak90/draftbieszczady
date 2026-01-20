@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
+      MYSQL_USER: ${WORDPRESS_DB_USER}
+      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${WORDPRESS_DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    ports:
+      - "${PORT:-8087}:80"
+    volumes:
+      - wp_data:/var/www/html
+      - ../wordpress-theme/blizniak-smerek:/var/www/html/wp-content/themes/blizniak-smerek
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/wp-login.php || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  wpcli:
+    image: wordpress:cli
+    depends_on:
+      wordpress:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      WP_URL: ${WP_URL}
+      WP_ADMIN_USER: ${WP_ADMIN_USER}
+      WP_ADMIN_PASS: ${WP_ADMIN_PASS}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+    volumes:
+      - wp_data:/var/www/html
+      - ../wordpress-theme/blizniak-smerek:/var/www/html/wp-content/themes/blizniak-smerek
+      - ./wpcli:/scripts
+    entrypoint: /bin/sh -c "chmod +x /scripts/*.sh 2>/dev/null || true; /scripts/init.sh"
+    working_dir: /var/www/html
+
+volumes:
+  db_data:
+  wp_data:
